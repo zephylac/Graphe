@@ -9,6 +9,13 @@ void DistancierCalculeR(graf *pgSimple,int bAfficher){//(O(S3)
 	int uL,uC;//u comme entier supérieur ou égal à un;L=ligne,C=colonne.
 	int nSommet=pgSimple->nSommetEnTout;
 	int dM[1+nSommet][1+nSommet];//matrice des distances,supposées être des entiers ou des réels déjà ramenés à des entiers
+	
+	int k = 0;
+	int j = 0;
+	int i = 0;
+	int pere[1+nSommet][1+nSommet];//matrice des peres
+	int chemin[1+nSommet][1+nSommet];//matrice contenant les résultats
+
 	Assert1("DistancierCalculeR",bGrapheSimple(pgSimple));
 	//générer la matrice d'incidence sommet-sommet dM qui décrit le graphe simple pgSimple
 		//dM:=0
@@ -21,9 +28,52 @@ void DistancierCalculeR(graf *pgSimple,int bAfficher){//(O(S3)
 				dM[sX][sY]=pgSimple->coulh[aK];//distance (sX,sY)
 			}
 	//exécuter l'algorithme de Floyd sur dM
-		//code à compléter...
+	//code à compléter...
+    	
+	// Init
+	for (uL=1;uL<=nSommet;uL++){
+		for (uC=1;uC<=nSommet;uC++){
+	        	chemin[uL][uC] = INFINI;
+	    		pere[uL][uC]= 0;
+	  	}
+	}
+	
+	for (uL=1;uL<=nSommet;uL++){
+		chemin[uL][uL] = 0;
+	}
+
+       	for (sX=1; sX <= nSommet; sX++ ){
+		//pere[sX][sX]; //Superflu car redondance
+          	for(sY=1 ; sY <= nSommet; sY++ ){
+            		if( dM[sX][sY] != 0 && sX != sY ){
+              			chemin[sX][sY] = dM[sX][sY];
+	      			pere[sX][sY] = sX;
+          		}
+		}
+	}
+	for (k = 1; k <= nSommet; k++){
+		for (i = 1; i <= nSommet; i++){
+			for (j = 1; j <= nSommet; j++){
+				if(chemin[i][j] > chemin[i][k] + chemin[k][j] && chemin[i][k] != INFINI && chemin[k][j] != INFINI){
+					chemin[i][j] = chemin[i][k] + chemin[k][j];
+					pere[i][j] = pere[k][j];
+				}
+			}
+		}
+	}
 	if (bAfficher){//afficher le distancier dM
 		//code à compléter...
+		for(i = 1; i <= nSommet; i++){
+			for(j = 1; j <= nSommet; j++){
+				if(chemin[i][j] == INFINI){
+					printf("        I");
+				}
+				else{
+					printf("%9i",chemin[i][j]);
+				}
+			}
+			printf("\n");
+		}
 	}
 }//DistancierCalculeR
 
@@ -58,7 +108,52 @@ void Tp1AMORCER(){
 }//Tp1AMORCER
 
 void Tp1Distancier(graf *pgG,int bAfficher){
-	//calculer le distancier de pgG supposé peu dense (algo de Dijkstra avec tas)
+//calculer le distancier de pgG supposé peu dense (algo de Dijkstra avec tas)
+	int temp;
+
+	//calcule le distancier de pgG supposé dense (algo de Floyd);poids des arcs dans pgSimple->coulh[]
+	int sX,sY;//a comme arc;s comme sommet
+	int uL,uC;//u comme entier supérieur ou égal à un;L=ligne,C=colonne.
+	int nSommet=pgG->nSommetEnTout;
+
+	int i = 0;
+	int j = 0;	
+	int chemin[1+nSommet][1+nSommet];//matrice contenant les résultats
+
+	for (uL=1;uL<=nSommet;uL++){
+		for (uC=1;uC<=nSommet;uC++){
+	        	chemin[uL][uC] = INFINI;
+	  	}
+	}
+	
+	for (uL=1;uL<=nSommet;uL++){
+		chemin[uL][uL] = 0;
+	}
+
+	VecteurCopier(pgG->coulh,1,pgG->nArcEnTout,pgG->nCout);
+
+       	for (sX=1; sX <= nSommet; sX++ ){
+          	for(sY=1 ; sY <= nSommet; sY++ ){
+			if(sX != sY){
+				chemin[sX][sY] = nGrapheCheminerTas(pgG,sX,sY);
+			}
+        	}
+	}
+	if (bAfficher){//afficher le distancier dM
+		//code à compléter...
+		for(i = 1; i <= nSommet; i++){
+			for(j = 1; j <= nSommet; j++){
+				if(chemin[i][j] == INFINI){
+					printf("        I");
+				}
+				else{
+					printf("%9i",chemin[i][j]);
+				}
+			}
+			printf("\n");
+		}
+	}
+	
 }//Tp1Distancier
 
 void Tp1INITIALISER(){//O(?)

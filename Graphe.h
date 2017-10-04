@@ -104,3 +104,6 @@ void GrapheVoir1(graf *pgG,int bDontCouleur,char *sMessage);
 void GrapheVoir2(graf *pgG,char *sMessage);
 void GrapheVoir3(graf *pgG,char *sMessage);
 void GrapheVoir4(graf *pgG,char *sMessage);
+
+int nGrapheCheminerTas(graf *pgG,int sSource,int sTrappe);
+

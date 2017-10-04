@@ -1,3 +1,5 @@
+#define INFINI 10000000
+
 void Tp1AMORCER();
 void Tp1Distancier(graf *pgG,int bAfficher);
 void Tp1INITIALISER();

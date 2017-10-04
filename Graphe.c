@@ -36,6 +36,12 @@ void GrapheSymetriqueCreerPondereR(int bDense,int nSommetEnTout,int nPoidsMax,gr
 void GrapheSymetrizer(graf *pgG);
 void GrapheViseR(graf *pgG,char *sMessage);
 
+int nGrapheCheminerTas(graf *pgG,int sSource,int sTrappe){
+  int temp;
+  return nGrapheCheminerTaS (pgG,sSource,sTrappe, &temp);
+}
+
+
 void DijkstraAvecOuSansTasCompareR(){
 	//effectue kuMesureMax mesures sur les deux algorithmes de Dijkstra, ie versions sans tas et avec tas, et affiche les résultats des mesures.
 	#define kuFacteur 10
