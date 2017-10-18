@@ -1,6 +1,8 @@
 #include "Outil.h"
 #include "Graphe.h"
 #include "Tp1.h"
+
+#define INFINI 10000000
 int bTp1AmorceR;//ie ce module a effectivement été amorcé
 
 void DistancierCalculeR(graf *pgSimple,int bAfficher){//(O(S3)
@@ -109,7 +111,6 @@ void Tp1AMORCER(){
 
 void Tp1Distancier(graf *pgG,int bAfficher){
 //calculer le distancier de pgG supposé peu dense (algo de Dijkstra avec tas)
-	int temp;
 
 	//calcule le distancier de pgG supposé dense (algo de Floyd);poids des arcs dans pgSimple->coulh[]
 	int sX,sY;//a comme arc;s comme sommet
