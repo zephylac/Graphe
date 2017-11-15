@@ -6,23 +6,18 @@ int bTp1AmorceR=kF;//ie ce module a effectivement été amorcé
 
 
 /*Langage
-	L4 = ba + ab + bab+
+	L1 = ba + bab
 
 Grammaire algebrique
-	S -> U + V + W
-	U -> b.a
-	V -> a.b
-	W -> U.X
-	X -> b.X + b
+	S -> U + V
+	U -> b.a.b
+  V -> b.a
 
 Grammaire hommogene
 	
-	S -> W + U + V
-	U -> B.A
-	V -> A.B
-	W -> U.X
-	X -> Y + B
-	Y -> B.X	
+	S -> U + V
+	U -> B.A.B
+	V -> B.A
 	A -> a
 	B -> b
 
@@ -30,11 +25,10 @@ Grammaire hommogene
 
 int bA(int iDebut, int *piFin);
 int bB(int iDebut, int *piFin);
-int bU(int idebut, int *pifin);
-int bV(int idebut, int *pifin);
-int bW(int idebut, int *pifin);
-int bX(int idebut, int *pifin);
-int bY(int idebut, int *pifin);
+
+int bU(int iDebut, int *piFin);
+int bV(int iDebut, int *piFin);
+
 int bS(int iDebut, int *piFin);
 
 void Tp1AMORCER(){
@@ -53,9 +47,8 @@ void Tp1TESTER(int iTest){
 	switch (iTest) {
 		case 1: sMOT="bab";break;
 		case 2: sMOT="ba";break;
-		case 3: sMOT="babb";break;
+		case 3: sMOT="aaba";break;
 		case 4: sMOT="baba";break;
-		case 5: sMOT="ab";break;
 		default: Assert1("Tp1TESTER default",0);
 	}
 	bSucces = bS(0,&iFin);
@@ -80,50 +73,26 @@ int bB(int iDebut, int *piFin){
 }
 
 int bU(int iDebut, int *piFin){
-	// U -> B.A
+	// U -> B.A.B
+	int iX, iY, iFin;
+	int bSucces = bB(iDebut,&iX) && bA(iX,&iY) && bB(iY, &iFin);
+	*piFin = (bSucces) ? iFin : iDebut;
+	return(bSucces);
+}
+
+
+int bV(int iDebut, int *piFin){
+	// V -> B.A
 	int iX, iFin;
 	int bSucces = bB(iDebut,&iX) && bA(iX,&iFin);
 	*piFin = (bSucces) ? iFin : iDebut;
 	return(bSucces);
 }
 
-int bV(int iDebut, int *piFin){
-	// V -> A.B
-	int iX, iFin;
-	int bSucces = bA(iDebut,&iX) && bB(iX,&iFin);
-	*piFin = (bSucces) ? iFin : iDebut;
-	return(bSucces);
-}
-
-
-int bW(int iDebut, int *piFin){
-	// W -> U.X
-	int iX, iFin;
-	int bSucces = bU(iDebut,&iX) && bX(iX,&iFin);
-	*piFin = (bSucces) ? iFin : iDebut;
-	return(bSucces);
-}
-
-int bX(int iDebut, int *piFin){
-	// X -> Y + B
-	int iFin;
-	int bSucces = bY(iDebut,&iFin) || bB(iDebut,&iFin);
-	*piFin = (bSucces) ? iFin : iDebut;
- 	return(bSucces);
-}
-
-int bY(int iDebut, int *piFin){
-	// Y -> B.X
-	int iX, iFin;
-	int bSucces = bB(iDebut,&iX) && bX(iX,&iFin) ;
-	*piFin = (bSucces) ? iFin : iDebut;
- 	return(bSucces);
-}
-
 int bS(int iDebut, int *piFin){
-	// S -> W + U + V 
+	// S -> U + V
 	int iFin;
-	int bSucces = bW(iDebut,&iFin) || bU(iDebut,&iFin) || bV(iDebut,&iFin)	;
+	int bSucces = bU(iDebut,&iFin) || bV(iDebut,&iFin);
 	*piFin = (bSucces) ? iFin : iDebut;
 	return(bSucces);
 }
